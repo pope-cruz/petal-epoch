@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Explore training compute and cost across the Epoch AI model dataset.">
+  <title>Compute Atlas</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="data.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header class="masthead">
+    <div class="frame masthead-inner">
+      <a class="brand" href="./index.html"><span class="mark" aria-hidden="true"></span> Compute Atlas</a>
+      <a class="source" href="https://epoch.ai/data/ai-models" target="_blank" rel="noopener">Epoch AI dataset ↗</a>
+    </div>
+  </header>
+  <main class="frame">
+    <section class="intro" aria-labelledby="title">
+      <div>
+        <h1 id="title">The cost of<br>training AI<span>.</span></h1>
+        <p>Explore how much compute AI models used to train and what that compute cost.</p>
+      </div>
+      <dl class="coverage" id="coverage"></dl>
+    </section>
+
+    <div class="workspace">
+      <form class="panel filters" id="filters" aria-labelledby="filter-title">
+        <div class="panel-heading"><h2 id="filter-title">Filters</h2><button type="reset" class="quiet">Reset all</button></div>
+        <label class="field">Search models<input id="query" type="search" placeholder="Model or organization"></label>
+        <label class="field">Domain<select id="domain"><option value="">All domains</option></select></label>
+        <fieldset>
+          <legend>Training compute <small>FLOP</small></legend>
+          <div class="bounds">
+            <label>Minimum<input id="compute-min" type="number" min="0" step="any" placeholder="Any"></label>
+            <label>Maximum<input id="compute-max" type="number" min="0" step="any" placeholder="Any"></label>
+          </div>
+          <p class="hint">Scientific notation works, e.g. 1e24.</p>
+        </fieldset>
+        <fieldset>
+          <legend>Training cost <small>2023 USD</small></legend>
+          <div class="bounds">
+            <label>Minimum<input id="cost-min" type="number" min="0" step="any" placeholder="Any"></label>
+            <label>Maximum<input id="cost-max" type="number" min="0" step="any" placeholder="Any"></label>
+          </div>
+        </fieldset>
+        <label class="check"><input id="complete" type="checkbox"> Require both metrics</label>
+        <p class="error" id="filter-error" role="status" hidden></p>
+      </form>
+
+      <section class="panel plot-panel" aria-labelledby="plot-title">
+        <div class="panel-heading"><div><h2 id="plot-title">Compute vs. cost</h2><p id="plot-summary"></p></div><span class="log-label">Log scale</span></div>
+        <div id="plot" class="plot" aria-label="Scatter plot of training compute and training cost"></div>
+        <div class="plot-footer"><span><i></i> Each dot is a model</span><span>Hover or select a dot for details</span></div>
+      </section>
+    </div>
+
+    <section class="panel results" aria-labelledby="results-title">
+      <div class="panel-heading results-head">
+        <div><h2 id="results-title">Model directory</h2><p id="results-count" aria-live="polite"></p></div>
+        <label class="sort">Sort by
+          <select id="sort">
+            <option value="compute-desc">Compute · high to low</option>
+            <option value="compute-asc">Compute · low to high</option>
+            <option value="cost-desc">Cost · high to low</option>
+            <option value="cost-asc">Cost · low to high</option>
+            <option value="date-desc">Release · newest</option>
+            <option value="name-asc">Model · A to Z</option>
+          </select>
+        </label>
+      </div>
+      <div class="table-scroll" tabindex="0" role="region" aria-label="Model results table">
+        <table>
+          <thead><tr><th scope="col">Model</th><th scope="col">Domain</th><th scope="col">Release</th><th scope="col">Training compute</th><th scope="col">Training cost</th></tr></thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+      <div class="pagination">
+        <span id="page-label"></span>
+        <div><button id="prev" type="button">Previous</button><button id="next" type="button">Next</button></div>
+      </div>
+    </section>
+
+    <footer>Source <a href="https://epoch.ai/data/ai-models" target="_blank" rel="noopener">Epoch AI, Data on AI models</a> · November 2026 snapshot · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>. Training cost figures can be estimates. Blank values are shown as “Unavailable”.</footer>
+  </main>
+  <dialog id="details" aria-labelledby="detail-title">
+    <form method="dialog"><button class="quiet close" aria-label="Close details">✕</button></form>
+    <h2 id="detail-title"></h2>
+    <p id="detail-org"></p>
+    <dl id="detail-metrics"></dl>
+    <a id="detail-link" target="_blank" rel="noopener">Model source ↗</a>
+  </dialog>
+</body>
+</html>
